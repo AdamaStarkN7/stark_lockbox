@@ -16,14 +16,15 @@ lib.addRadialItem(
 
 RegisterNetEvent('stark_lockbox:client:openLockBox', function()
     local player = PlayerPedId()
-    if IsPedInAnyVehicle(player) then
+    -- if IsPedInAnyVehicle(player) then
+    if IsPedInAnyPoliceVehicle(player) then
         if QBCore.Functions.GetPlayerData().job.name == 'police' or QBCore.Functions.GetPlayerData().job.name == 'lssd' then
             ox_inventory:openInventory('stash', 'leo_lockbox')
         else
             QBCore.Functions.Notify("You do not have an LEO job!", 'error', 5000)
         end
     else
-        QBCore.Functions.Notify("You're not currently in a vehicle!", 'error', 5000)
+        QBCore.Functions.Notify("You're not currently in a police vehicle!", 'error', 5000)
     end
 end)
 
