@@ -8,11 +8,14 @@ name 'stark_lockbox'
 
 author 'Adam Biegert'
 
-version '1.0'
+version '1.0.1'
 
-description 'LEO Lockbox Script for Ox Inventory'
+description 'LEO Lockbox Script'
 
 dependencies {
+    'qb-radialmenu',
+    -- 'qb-inventory',
+    -- 'ps-inventory',
     'ox_lib',
     'ox_inventory',
 }
