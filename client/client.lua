@@ -1,15 +1,46 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+local id = 'Open Lockbox'
+
 function checkValidJob()
-    for i, j in ipairs(Config.leoJobs) do
-        if (QBCore.Functions.GetPlayerData().job.name == j) then
+    for i, job in ipairs(Config.leoJobs) do
+        if (QBCore.Functions.GetPlayerData().job.name == job) then
             return true
         end
     end
     return false
 end
 
+function checkValidJobType()
+    for j, type in ipairs(Config.leoJobTypes) do
+        if (QBCore.Functions.GetPlayerData().job.type == type ) then
+            return true
+        end
+    end
+    return false
+end
+
+-- default
+lib.addRadialItem({
+    {
+        id = id,
+        label = 'Lock Box',
+        icon = 'lock',
+        onSelect = function ()
+            TriggerEvent('stark_lockbox:client:openLockBox')
+        end
+    }
+})
+
+-- Removes From Ox Lib Global Radial Menu If No LEO Job
+if tostring(checkValidJob()) == 'false' or tostring(checkValidJobType()) == 'false' then
+    exports.ox_lib:removeRadialItem(id)
+end
+
 if Config.radial == 'qb' then
+
+    -- Removes From Ox Lib Global Radial Menu If User Wants QB Radial Functionality
+    exports.ox_lib:removeRadialItem(id)
 
     local function addRadialLeoLockboxOption()
         local player = PlayerPedId()
@@ -25,7 +56,7 @@ if Config.radial == 'qb' then
 
     local function updateRadial()
         local player = PlayerPedId()
-        if checkValidJob() then
+        if checkValidJob() or checkValidJobType() then
             if IsPedInAnyPoliceVehicle(player) then
                 addRadialLeoLockboxOption()
             elseif MenuItemId ~= nil then
@@ -44,41 +75,20 @@ if Config.radial == 'qb' then
 
 end
 
-if Config.radial == 'ox' then
-
-    if checkValidJob() then
-        lib.addRadialItem({
-                {
-                    id = 'Open Lockbox',
-                    label = 'Lock Box',
-                    icon = 'lock',
-                    onSelect = function()
-                        TriggerEvent('stark_lockbox:client:openLockBox')
-                    end
-                },
-            }
-        )
-    else
-        lib.removeRadialItem('Open Lockbox')
-    end
-
-end
-
 RegisterNetEvent('stark_lockbox:client:openLockBox', function ()
     local player = PlayerPedId()
     if IsPedInAnyPoliceVehicle(player) then
-        if checkValidJob() then
+        if checkValidJob() or checkValidJobType() then
+            local vehicle = GetVehiclePedIsIn(player, false)
+            local id = GetVehicleNumberPlateText(vehicle)
+
             if Config.inventory == 'qb' then
-                local vehicle = GetVehiclePedIsIn(player, false)
-                local id = GetVehicleNumberPlateText(vehicle)
                 TriggerServerEvent("inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id, {
                     maxweight = Config.lockboxWeight,
                     slots = Config.lockboxSlots
                 })
                 TriggerEvent("inventory:client:SetCurrentStash", "LEO Lockbox " .. id)
             elseif Config.inventory == 'ps' then
-                local vehicle = GetVehiclePedIsIn(player, false)
-                local id = GetVehicleNumberPlateText(vehicle)
                 TriggerServerEvent("ps-inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id {
                     maxweight = Config.lockboxWeight,
                     slots = Config.lockboxSlots
@@ -90,6 +100,7 @@ RegisterNetEvent('stark_lockbox:client:openLockBox', function ()
             else
                 QBCore.Functions.Notify("Your inventory script is not supported!", 'error', 5000)
             end
+
         else
             QBCore.Functions.Notify("You do not have an LEO job!", 'error', 5000)
         end
