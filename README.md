@@ -21,6 +21,7 @@ Stark Lockbox is a QBCore resource allowing for LEOs to utilize a locking storag
 3. Customize the script to your liking
 4. Add ```ensure stark_lockbox``` to your server.cfg
 5. Restart your server and enjoy
+6. NOTE: This resource must start after the dependent scripts defined in Dependencies!
 
 # Features
 1. Unique Lockboxes for LEO use in their vehicles

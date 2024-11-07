@@ -8,7 +8,7 @@ name 'stark_lockbox'
 
 author 'Adam Biegert'
 
-version '1.0.1'
+version '1.0.2'
 
 description 'LEO Lockbox Script'
 
