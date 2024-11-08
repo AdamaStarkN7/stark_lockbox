@@ -1,6 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-local id = 'Open Lockbox'
+QBCore.Debug(QBCore.Functions.GetPlayerData().job)
 
 function checkValidJob()
     for i, job in ipairs(Config.leoJobs) do
@@ -20,6 +20,8 @@ function checkValidJobType()
     return false
 end
 
+local id = 'Open Lockbox'
+
 -- default
 lib.addRadialItem({
     {
@@ -33,14 +35,18 @@ lib.addRadialItem({
 })
 
 -- Removes From Ox Lib Global Radial Menu If No LEO Job
-if tostring(checkValidJob()) == 'false' or tostring(checkValidJobType()) == 'false' then
+-- if tostring(checkValidJob()) == 'false' or tostring(checkValidJobType()) == 'false' then
+--     exports.ox_lib:removeRadialItem(id)
+-- end
+
+if Config.radial ~= 'ox' then
     exports.ox_lib:removeRadialItem(id)
 end
 
 if Config.radial == 'qb' then
 
     -- Removes From Ox Lib Global Radial Menu If User Wants QB Radial Functionality
-    exports.ox_lib:removeRadialItem(id)
+    -- exports.ox_lib:removeRadialItem(id)
 
     local function addRadialLeoLockboxOption()
         local player = PlayerPedId()
