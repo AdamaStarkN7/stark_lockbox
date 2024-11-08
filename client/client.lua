@@ -1,7 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-QBCore.Debug(QBCore.Functions.GetPlayerData().job)
-
 function checkValidJob()
     for i, job in ipairs(Config.leoJobs) do
         if (QBCore.Functions.GetPlayerData().job.name == job) then
