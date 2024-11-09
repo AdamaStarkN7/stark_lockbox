@@ -16,14 +16,14 @@ dependencies {
     'qb-radialmenu',
     -- 'qb-inventory',
     -- 'ps-inventory',
-    'ox_lib',
-    'ox_inventory',
+    'ox_lib', -- Can be commented out or removed if you don't want to use Ox
+    'ox_inventory', -- Can be commented out or removed if you don't want to use Ox
 }
 
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'config.lua',
-    '@ox_lib/init.lua'
+    '@ox_lib/init.lua' -- Can be commented out or removed if you don't want to use Ox
 }
 
 client_scripts {

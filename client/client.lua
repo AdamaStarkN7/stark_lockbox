@@ -1,18 +1,12 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+-- Credit: SneakEOne
 function checkValidJob()
-    for i, job in ipairs(Config.leoJobs) do
-        if (QBCore.Functions.GetPlayerData().job.name == job) then
-            return true
-        end
-    end
-    return false
-end
-
-function checkValidJobType()
-    for j, type in ipairs(Config.leoJobTypes) do
-        if (QBCore.Functions.GetPlayerData().job.type == type ) then
-            return true
+    if not NetworkIsPlayerActive(PlayerId()) then
+        for i, job in ipairs(Config.leoJobs) do
+            if (QBCore.Functions.GetPlayerData().job.name == job) then
+                return true
+            end
         end
     end
     return false
@@ -33,18 +27,15 @@ lib.addRadialItem({
 })
 
 -- Removes From Ox Lib Global Radial Menu If No LEO Job
--- if tostring(checkValidJob()) == 'false' or tostring(checkValidJobType()) == 'false' then
---     exports.ox_lib:removeRadialItem(id)
--- end
-
-if Config.radial ~= 'ox' then
+if checkValidJob() == false then
     exports.ox_lib:removeRadialItem(id)
 end
 
+-- Credit: KobenJM21 & SneakEOne
 if Config.radial == 'qb' then
 
     -- Removes From Ox Lib Global Radial Menu If User Wants QB Radial Functionality
-    -- exports.ox_lib:removeRadialItem(id)
+    exports.ox_lib:removeRadialItem(id)
 
     local function addRadialLeoLockboxOption()
         local player = PlayerPedId()
@@ -60,7 +51,7 @@ if Config.radial == 'qb' then
 
     local function updateRadial()
         local player = PlayerPedId()
-        if checkValidJob() or checkValidJobType() then
+        if checkValidJob() then
             if IsPedInAnyPoliceVehicle(player) then
                 addRadialLeoLockboxOption()
             elseif MenuItemId ~= nil then
@@ -79,32 +70,78 @@ if Config.radial == 'qb' then
 
 end
 
-RegisterNetEvent('stark_lockbox:client:openLockBox', function ()
+-- Credit: AdamaStark & SneakEOne
+function openLockBoxInventory()
+
+    local vehicle = GetVehiclePedIsIn(player, false)
+    local id = GetVehicleNumberPlateText(vehicle)
+
+    if Config.inventory == 'qb' then
+        TriggerServerEvent("inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id, {
+            maxweight = Config.lockboxWeight,
+            slots = Config.lockboxSlots
+        })
+        TriggerEvent("inventory:client:SetCurrentStash", "LEO Lockbox " .. id)
+
+    elseif Config.inventory == 'ps' then
+        TriggerServerEvent("ps-inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id {
+            maxweight = Config.lockboxWeight,
+            slots = Config.lockboxSlots
+        })
+        TriggerEvent("ps-inventory:client:SetCurrentStash", "LEO Lockbox " ..  id)
+
+    elseif Config.inventory == 'ox' then
+        local ox_inventory = exports.ox_inventory
+        ox_inventory:openInventory('stash', 'leo_lockbox')
+
+    else
+        QBCore.Functions.Notify("Your inventory script is not currently supported!", 'error', 5000)
+    end
+
+end
+
+-- Credit: AdamaStark & SneakEOne
+RegisterNetEvent('stark_lockbox:client:openLockBox', function()
     local player = PlayerPedId()
     if IsPedInAnyPoliceVehicle(player) then
-        if checkValidJob() or checkValidJobType() then
-            local vehicle = GetVehiclePedIsIn(player, false)
-            local id = GetVehicleNumberPlateText(vehicle)
+        if checkValidJob() then
+            if Config.progress.enabled == 'true' then
+                if Config.progress.type == 'qb' then
 
-            if Config.inventory == 'qb' then
-                TriggerServerEvent("inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id, {
-                    maxweight = Config.lockboxWeight,
-                    slots = Config.lockboxSlots
-                })
-                TriggerEvent("inventory:client:SetCurrentStash", "LEO Lockbox " .. id)
-            elseif Config.inventory == 'ps' then
-                TriggerServerEvent("ps-inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id {
-                    maxweight = Config.lockboxWeight,
-                    slots = Config.lockboxSlots
-                })
-                TriggerEvent("ps-inventory:client:SetCurrentStash", "LEO Lockbox " ..  id)
-            elseif Config.inventory == 'ox' then
-                local ox_inventory = exports.ox_inventory
-                ox_inventory:openInventory('stash', 'leo_lockbox')
+                    QBCore.Functions.Progressbar("open_lock_box", "Opening Lockbox...", Config.progress.duration, false,
+                    true, {
+                        disableMovement = true,
+                        disableCarMovement = true,
+                        disableMouse = false,
+                        disableCombat = true
+                    }, {}, {}, {}, function()
+                        openLockBoxInventory()
+                    end, function()
+                        QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
+                    end)
+
+                elseif Config.progress.type == 'ox' then
+
+                    -- Customizable: lib.progressBar or lib.progressCircle
+                    if lib.progressCircle({
+                        duration = Config.progress.duration,
+                        position = 'bottom',
+                        label = 'Opening Lockbox...',
+                        useWhileDead = false,
+                        canCancel = true,
+                        disable = {
+                            move = true,
+                            car = true,
+                            mouse = false,
+                            combat = true
+                        }
+                    }) then openLockBoxInventory()
+                    end
+                end
+
             else
-                QBCore.Functions.Notify("Your inventory script is not supported!", 'error', 5000)
+                openLockBoxInventory()
             end
-
         else
             QBCore.Functions.Notify("You do not have an LEO job!", 'error', 5000)
         end
