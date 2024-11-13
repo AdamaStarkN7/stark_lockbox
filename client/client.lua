@@ -2,13 +2,13 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 -- Credit: SneakEOne
 function checkValidJob()
-    if not NetworkIsPlayerActive(PlayerId()) then
+    -- if not NetworkIsPlayerActive(PlayerId()) then
         for i, job in ipairs(Config.leoJobs) do
             if (QBCore.Functions.GetPlayerData().job.name == job) then
                 return true
             end
         end
-    end
+    -- end
     return false
 end
 
