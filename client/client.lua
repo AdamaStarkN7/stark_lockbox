@@ -21,6 +21,13 @@ function checkValidAmbulanceJob()
     return false
 end
 
+--[[ 
+function checkJob() 
+    local playerJob = QBCore.Functions.GetPlayerData().job 
+    if playerJob == nil then return false end
+    Loop 
+]]
+
 local id = 'Open Lockbox'
 
 -- default
@@ -61,6 +68,13 @@ if Config.radial == 'qb' then
     local function updateRadial()
         local player = PlayerPedId()
         if checkValidJob() then
+            -- if IsPedInAnyVehicle(player, false) then
+                -- local vehicle = GetVehiclePedIsIn(player, false)
+                -- local vehicleType = GetVehicleClass(vehicle)
+                -- if vehicleType == 18 then
+                -- code here
+                -- end
+            -- end
             if IsPedInAnyPoliceVehicle(player) then
                 addRadialLeoLockboxOption()
             elseif MenuItemId ~= nil then
@@ -146,6 +160,7 @@ RegisterNetEvent('stark_lockbox:client:openLockBox', function()
                         }
                     }) then openLockBoxInventory()
                     end
+                    
                 end
 
             else
