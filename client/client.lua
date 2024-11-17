@@ -12,6 +12,15 @@ function checkValidJob()
     return false
 end
 
+function checkValidAmbulanceJob()
+    for j, job in ipairs(Config.emsJobs) do
+        if (QBCore.Functions.GetPlayerData().job.name == job) then
+            return true
+        end
+    end
+    return false
+end
+
 local id = 'Open Lockbox'
 
 -- default
