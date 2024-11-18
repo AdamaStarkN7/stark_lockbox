@@ -1,36 +1,31 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
 -- Credit: SneakEOne
-function checkValidJob()
-    -- if not NetworkIsPlayerActive(PlayerId()) then
-        for i, job in ipairs(Config.leoJobs) do
-            if (QBCore.Functions.GetPlayerData().job.name == job) then
-                return true
-            end
-        end
-    -- end
-    return false
-end
+local currentJob = QBCore.Functions.GetPlayerData().job
 
-function checkValidAmbulanceJob()
-    for j, job in ipairs(Config.emsJobs) do
-        if (QBCore.Functions.GetPlayerData().job.name == job) then
+function checkValidPoliceJob()
+    if currentJob == nil then return false end
+    for i, job in ipairs(Config.leoJobs) do
+        if (currentJob.name == job) then
             return true
         end
     end
     return false
 end
 
---[[ 
-function checkJob() 
-    local playerJob = QBCore.Functions.GetPlayerData().job 
-    if playerJob == nil then return false end
-    Loop 
-]]
+function checkValidAmbulanceJob()
+    if currentJob == nil then return false end
+    for j, job in ipairs(Config.emsJobs) do
+        if (currentJob.name == job) then
+            return true
+        end
+    end
+    return false
+end
 
 local id = 'Open Lockbox'
 
--- default
+-- Radial Menu Default: Ox
 lib.addRadialItem({
     {
         id = id,
@@ -42,15 +37,15 @@ lib.addRadialItem({
     }
 })
 
--- Removes From Ox Lib Global Radial Menu If No LEO Job
-if checkValidJob() == false then
+-- Removes Lockbox From Ox Lib Global Radial Menu If Incorrect Jobs
+if checkValidPoliceJob() == false or checkValidAmbulanceJob() == false then
     exports.ox_lib:removeRadialItem(id)
 end
 
 -- Credit: KobenJM21 & SneakEOne
 if Config.radial == 'qb' then
 
-    -- Removes From Ox Lib Global Radial Menu If User Wants QB Radial Functionality
+    -- Removes Lockbox From Ox Lib Global Radial Menu If QB Is Chosen
     exports.ox_lib:removeRadialItem(id)
 
     local function addRadialLeoLockboxOption()
@@ -67,16 +62,16 @@ if Config.radial == 'qb' then
 
     local function updateRadial()
         local player = PlayerPedId()
-        if checkValidJob() then
-            -- if IsPedInAnyVehicle(player, false) then
-                -- local vehicle = GetVehiclePedIsIn(player, false)
-                -- local vehicleType = GetVehicleClass(vehicle)
-                -- if vehicleType == 18 then
-                -- code here
-                -- end
-            -- end
-            if IsPedInAnyPoliceVehicle(player) then
-                addRadialLeoLockboxOption()
+        if checkValidPoliceJob() or checkValidAmbulanceJob() then
+            if IsPedInAnyVehicle(player, false) then
+                local vehicle = GetVehiclePedIsIn(player, false)
+                local vehicleType = GetVehicleClass(vehicle)
+                if vehicleType == 18 then
+                    addRadialLeoLockboxOption()
+                elseif MenuItemId ~= nil then
+                    exports['qb-radialmenu']:RemoveOption(MenuItemId)
+                    MenuItemId = nil
+                end
             elseif MenuItemId ~= nil then
                 exports['qb-radialmenu']:RemoveOption(MenuItemId)
                 MenuItemId = nil
@@ -87,7 +82,7 @@ if Config.radial == 'qb' then
         end
     end
 
-    RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function ()
+    RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
         updateRadial()
     end)
 
@@ -96,8 +91,8 @@ end
 -- Credit: AdamaStark & SneakEOne
 function openLockBoxInventory()
 
-    local vehicle = GetVehiclePedIsIn(player, false)
-    local id = GetVehicleNumberPlateText(vehicle)
+    local Vehicle = GetVehiclePedIsIn(player, false)
+    local id = GetVehicleNumberPlateText(Vehicle)
 
     if Config.inventory == 'qb' then
         TriggerServerEvent("inventory:server:OpenInventory", "stash", "LEO Lockbox " .. id, {
@@ -126,50 +121,65 @@ end
 -- Credit: AdamaStark & SneakEOne
 RegisterNetEvent('stark_lockbox:client:openLockBox', function()
     local player = PlayerPedId()
-    if IsPedInAnyPoliceVehicle(player) then
-        if checkValidJob() then
-            if Config.progress.enabled == 'true' then
-                if Config.progress.type == 'qb' then
+    if IsPedInAnyVehicle(player, false) then
+        local vehicle = GetVehiclePedIsIn(player, false)
+        local vehicleType = GetVehicleClass(vehicle)
+        if vehicleType == 18 then
+            if checkValidPoliceJob() or checkValidAmbulanceJob() then
+                if Config.progress.enabled == 'true' then
 
-                    QBCore.Functions.Progressbar("open_lock_box", "Opening Lockbox...", Config.progress.duration, false,
-                    true, {
-                        disableMovement = true,
-                        disableCarMovement = true,
-                        disableMouse = false,
-                        disableCombat = true
-                    }, {}, {}, {}, function()
-                        openLockBoxInventory()
-                    end, function()
-                        QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
-                    end)
+                    if Config.progress.type == 'qb' then
 
-                elseif Config.progress.type == 'ox' then
+                        QBCore.Functions.Progressbar("open_lock_box", "Opening Lockbox...", Config.progress.duration, false,
+                        true, {
+                            disableMovement = true,
+                            disableCarMovement = true,
+                            disableMouse = false,
+                            disableCombat = true
+                        }, {}, {}, {}, function()
+                            openLockBoxInventory()
+                        end, function()
+                            QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
+                        end)
 
-                    -- Customizable: lib.progressBar or lib.progressCircle
-                    if lib.progressCircle({
-                        duration = Config.progress.duration,
-                        position = 'bottom',
-                        label = 'Opening Lockbox...',
-                        useWhileDead = false,
-                        canCancel = true,
-                        disable = {
-                            move = true,
-                            car = true,
-                            mouse = false,
-                            combat = true
-                        }
-                    }) then openLockBoxInventory()
+                    elseif Config.progress.type == 'ox' then
+
+                        -- Customizable: lib.progressBar or lib.progressCircle
+                        if lib.progressCircle({
+                            duration = Config.progress.duration,
+                            position = 'bottom',
+                            label = 'Opening Lockbox...',
+                            useWhileDead = false,
+                            canCancel = true,
+                            disable = {
+                                move = true,
+                                car = true,
+                                mouse = false,
+                                combat = true
+                            }
+                        }) then openLockBoxInventory()
+                        end
+
                     end
-                    
+
+                else
+                    -- Progress Not Enabled
+                    openLockBoxInventory()
                 end
 
             else
-                openLockBoxInventory()
+                -- Fails One or Both Job Check(s)
+                QBCore.Functions.Notify("You do not have the correct job!", 'error', 5000)
             end
+
         else
-            QBCore.Functions.Notify("You do not have an LEO job!", 'error', 5000)
+            -- Fails Emergency Vehicle Check
+            QBCore.Functions.Notify("You're not in an emergency vehicle!", 'error', 5000)
         end
+
     else
-        QBCore.Functions.Notify("You're not currently in a police vehicle!", 'error', 5000)
+        -- Fails IsPedInAnyVehicle() Check
+        QBCore.Functions.Notify("You're not currently in any vehicle!", 'error', 5000)
     end
+
 end)

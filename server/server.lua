@@ -52,3 +52,5 @@ end
 QBCore.Commands.Add("lockbox", "Opens The Secured LEO Lockbox (LEOs Only)", {}, false, function(source)
     TriggerClientEvent('stark_lockbox:client:openLockBox', source)
 end)
+
+lib.versionCheck('AdamaStarkN7/stark_lockbox')

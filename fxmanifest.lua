@@ -8,9 +8,9 @@ name 'stark_lockbox'
 
 author 'Adam Biegert'
 
-version '1.0.2'
+version '1.0.3'
 
-description 'LEO Lockbox Script'
+description 'A LEO Lockbox Script for QBCore'
 
 dependencies {
     'qb-radialmenu',
@@ -20,16 +20,16 @@ dependencies {
     'ox_inventory', -- Can be commented out or removed if you don't want to use Ox
 }
 
-shared_scripts {
+shared_script {
     '@qb-core/shared/locale.lua',
     'config.lua',
     '@ox_lib/init.lua' -- Can be commented out or removed if you don't want to use Ox
 }
 
-client_scripts {
-    'client/client.lua'
+client_scripts{
+    'client/*.lua'
 }
 
-server_scripts {
-    'server/server.lua'
+server_scripts{
+    'server/*.lua'
 }
