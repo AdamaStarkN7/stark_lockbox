@@ -113,12 +113,20 @@ function openLockBoxInventory()
         ox_inventory:openInventory('stash', 'leo_lockbox')
 
     else
-        QBCore.Functions.Notify("Your inventory script is not currently supported!", 'error', 5000)
+        if Config.notify == 'qb' then
+            QBCore.Functions.Notify("Your inventory script is not currently supported!", 'error', 5000)
+        elseif Config.notify == 'ox' then
+            lib.notify({
+                description = 'Your inventory script is not currently supported!',
+                duration = 5000,
+                position = 'top-right',
+                type = 'error',
+            })
+        end
     end
-
 end
 
--- Credit: AdamaStark & SneakEOne
+-- Credit: AdamaStark, SneakEOne, & KobenJM21
 RegisterNetEvent('stark_lockbox:client:openLockBox', function()
     local player = PlayerPedId()
     if IsPedInAnyVehicle(player, false) then
@@ -139,7 +147,16 @@ RegisterNetEvent('stark_lockbox:client:openLockBox', function()
                         }, {}, {}, {}, function()
                             openLockBoxInventory()
                         end, function()
-                            QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
+                            if Config.notify == 'qb' then
+                                QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
+                            elseif Config.notify == 'ox' then
+                                lib.notify({
+                                    description = 'Cancelled Opening Lockbox!',
+                                    duration = 5000,
+                                    position = 'top-right',
+                                    type = 'error',
+                                })
+                            end
                         end)
 
                     elseif Config.progress.type == 'ox' then
@@ -169,17 +186,44 @@ RegisterNetEvent('stark_lockbox:client:openLockBox', function()
 
             else
                 -- Fails One or Both Job Check(s)
-                QBCore.Functions.Notify("You do not have the correct job!", 'error', 5000)
+                if Config.notify == 'qb' then
+                    QBCore.Functions.Notify("You do not have the correct job!", 'error', 5000)
+                elseif Config.notify == 'ox' then
+                    lib.notify({
+                        description = 'You do not have the correct job!',
+                        duration = 5000,
+                        position = 'top-right',
+                        type = 'error',
+                    })
+                end
             end
 
         else
             -- Fails Emergency Vehicle Check
-            QBCore.Functions.Notify("You're not in an emergency vehicle!", 'error', 5000)
+            if Config.notify == 'qb' then
+                QBCore.Functions.Notify("You're not in an emergency vehicle!", 'error', 5000)
+            elseif Config.notify == 'ox' then
+                lib.notify({
+                    description = 'You\'re not in an emergency vehicle!',
+                    duration = 5000,
+                    position = 'top-right',
+                    type = 'error',
+                })
+            end
         end
 
     else
         -- Fails IsPedInAnyVehicle() Check
-        QBCore.Functions.Notify("You're not currently in any vehicle!", 'error', 5000)
+        if Config.notify == 'qb' then
+            QBCore.Functions.Notify("You're not currently in any vehicle!", 'error', 5000)
+        elseif Config.notify == 'ox' then
+            lib.notify({
+                description = 'You\'re not currently in any vehicle!',
+                duration = 5000,
+                position = 'top-right',
+                type = 'error',
+            })
+        end
     end
 
 end)
