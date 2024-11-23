@@ -1,9 +1,8 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
 -- Credit: SneakEOne
-local currentJob = QBCore.Functions.GetPlayerData().job
-
 function checkValidPoliceJob()
+    local currentJob = QBCore.Functions.GetPlayerData().job
     if currentJob == nil then return false end
     for i, job in ipairs(Config.leoJobs) do
         if (currentJob.name == job) then
@@ -14,6 +13,7 @@ function checkValidPoliceJob()
 end
 
 function checkValidAmbulanceJob()
+    local currentJob = QBCore.Functions.GetPlayerData().job
     if currentJob == nil then return false end
     for j, job in ipairs(Config.emsJobs) do
         if (currentJob.name == job) then
@@ -25,21 +25,20 @@ end
 
 local id = 'Open Lockbox'
 
--- Radial Menu Default: Ox
-lib.addRadialItem({
-    {
-        id = id,
-        label = 'Lock Box',
-        icon = 'lock',
-        onSelect = function ()
-            TriggerEvent('stark_lockbox:client:openLockBox')
-        end
-    }
-})
+if Config.radial == 'ox' then
 
--- Removes Lockbox From Ox Lib Global Radial Menu If Incorrect Jobs
-if checkValidPoliceJob() == false or checkValidAmbulanceJob() == false then
-    exports.ox_lib:removeRadialItem(id)
+    lib.addRadialItem({
+        {
+            id = id,
+            label = 'Lock Box',
+            icon = 'lock',
+            onSelect = function ()
+                TriggerEvent('stark_lockbox:client:openLockBox')
+            end,
+            keepOpen = false
+        }
+    })
+
 end
 
 -- Credit: KobenJM21 & SneakEOne

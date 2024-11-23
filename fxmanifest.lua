@@ -12,16 +12,7 @@ version '1.0.3'
 
 description 'A LEO Lockbox Script for QBCore'
 
-dependencies {
-    'qb-radialmenu',
-    -- 'qb-inventory',
-    -- 'ps-inventory',
-    'ox_lib', -- Can be commented out or removed if you don't want to use Ox
-    'ox_inventory', -- Can be commented out or removed if you don't want to use Ox
-}
-
 shared_script {
-    '@qb-core/shared/locale.lua',
     'config.lua',
     '@ox_lib/init.lua' -- Can be commented out or removed if you don't want to use Ox
 }
