@@ -1,7 +1,5 @@
 if GetResourceState('qbx_core') ~= 'started' then return end
 
-local Config = lib.require('config')
-
 local ox_inventory = exports.ox_inventory
 
 local lockbox = {

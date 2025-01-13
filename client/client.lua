@@ -1,5 +1,3 @@
-local Config = lib.require('config')
-
 if Config.framework == 'qb' then
 
     local QBCore = exports['qb-core']:GetCoreObject()
