@@ -25,6 +25,7 @@ Stark Lockbox is a resource that allows LEO & EMS to utilize a locking storage i
 4. Add ```ensure stark_lockbox``` to your server.cfg
 5. Restart your server and enjoy!!
 6. NOTE: This resource must start after the dependent scripts defined in Dependencies!
+7. If using the QBox framework, be sure to check the qbx_radialmenu.txt file for proper setup in your server!
 
 # Features
 1. Unique Lockboxes for LEO or EMS to use in their vehicles
