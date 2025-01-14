@@ -36,8 +36,7 @@ Stark Lockbox is a resource that allows LEO & EMS to utilize a locking storage i
 2. QBox
 
 # Dependencies
-1. qb-radialmenu
-2. progressbar
-3. qb-inventory or ps-inventory
+1. qb-radialmenu or qbx_radialmenu
+3. qb-inventory or ps-inventory (QBCore)
 4. ox_lib
-5. ox_inventory
+5. ox_inventory (QBCore or QBox)
