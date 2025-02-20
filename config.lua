@@ -1,6 +1,6 @@
 Config = {}
 
-Config.framework = 'qbx' -- supported: 'qb' or 'qbx'
+Config.framework = 'qb' -- supported: 'qb' or 'qbx'
 
 Config.notify = 'ox' -- supported: 'qb' or 'ox'
 
@@ -15,7 +15,7 @@ Config.progress = {
 }
 
 Config.qbxProgress = {
-    enabled = 'true',
+    enabled = 'false',
     duration = 2500
 }
 
@@ -26,6 +26,7 @@ Config.lockboxWeight = 120000 -- Recommended Value, Could Be Higher or Lower Dep
 Config.leoJobs = {
     'police',
     'lssd',
+    'sast',
     'bcso',
     'sasp',
     -- add your server's police job here as found in qb-core/shared/jobs.lua or qbx_core/shared/jobs.lua
