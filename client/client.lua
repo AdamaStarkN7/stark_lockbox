@@ -108,7 +108,6 @@ if Config.framework == 'qb' then
                                     })
                                 end
                             end)
-
                         elseif Config.progress.type == 'ox' then
 
                             -- Customizable: lib.progressBar or lib.progressCircle
@@ -125,15 +124,23 @@ if Config.framework == 'qb' then
                                     combat = true
                                 }
                             }) then openLockBoxInventory()
+                            else
+                                if Config.notify == 'qb' then
+                                    QBCore.Functions.Notify("Cancelled Opening Lockbox!", 'error', 5000)
+                                elseif Config.notify == 'ox' then
+                                    lib.notify({
+                                        description = 'Cancelled Opening Lockbox!',
+                                        duration = 5000,
+                                        position = 'top-right',
+                                        type = 'error',
+                                    })
+                                end
                             end
-
                         end
-
                     else
                         -- Progress Not Enabled
                         openLockBoxInventory()
                     end
-
                 else
                     -- Fails One or Both Job Check(s)
                     if Config.notify == 'qb' then
@@ -147,7 +154,6 @@ if Config.framework == 'qb' then
                         })
                     end
                 end
-
             else
                 -- Fails Emergency Vehicle Check
                 if Config.notify == 'qb' then
@@ -161,7 +167,6 @@ if Config.framework == 'qb' then
                     })
                 end
             end
-
         else
             -- Fails IsPedInAnyVehicle() Check
             if Config.notify == 'qb' then
@@ -175,15 +180,12 @@ if Config.framework == 'qb' then
                 })
             end
         end
-
     end)
-
 end
 
 if Config.framework == 'qbx' then
 
     function openLockBoxInventory()
-
         if GetResourceState('ox_inventory') ~= 'started' then
             lib.notify({
                 description = 'Ox Inventory was not started correctly!',
@@ -195,7 +197,6 @@ if Config.framework == 'qbx' then
             local ox_inventory = exports.ox_inventory
             ox_inventory:openInventory('stash', 'dps_lockbox')
         end
-
     end
 
     RegisterNetEvent('stark_lockbox:client:openLockBox', function()
@@ -221,6 +222,13 @@ if Config.framework == 'qbx' then
                                 combat = true
                             }
                         }) then openLockBoxInventory()
+                        else
+                            lib.notify({
+                                description = 'Cancelled Opening Lockbox!',
+                                duration = 5000,
+                                position = 'top-right',
+                                type = 'error',
+                            })
                         end
                     else
                         -- Progress Not Enabled
@@ -254,5 +262,4 @@ if Config.framework == 'qbx' then
             })
         end
     end)
-
 end
