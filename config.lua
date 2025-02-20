@@ -15,7 +15,7 @@ Config.progress = {
 }
 
 Config.qbxProgress = {
-    enabled = 'false',
+    enabled = 'false', -- For Use With QBox Framework, Set To 'false' If Not Using QBox
     duration = 2500
 }
 
