@@ -16,7 +16,7 @@ I would also like to thank the developers of Qbox for creating a solid, alternat
 I would like to thank the amazing developers at Overextended for creating stellar resources in both Ox Inventory and Ox Lib.
 
 # Description
-Stark Lockbox is a resource that allows LEO & EMS to utilize a locking storage in their vehicles that only they can acccess, keeping vital law enforcement or medical equipment safe from others while enhancing QOL and gameplay experience.
+Stark Lockbox is a resource that allows both LEO & EMS to utilize a locking storage in their vehicles that only they can acccess, keeping vital law enforcement or medical equipment safe from others while enhancing QOL and gameplay experience.
 
 ## Installation
 1. Add stark_lockbox to your resources folder for your server
@@ -24,8 +24,7 @@ Stark Lockbox is a resource that allows LEO & EMS to utilize a locking storage i
 3. Customize the script to your liking in the Config!
 4. Add ```ensure stark_lockbox``` to your server.cfg
 5. Restart your server and enjoy!!
-6. NOTE: This resource must start after the dependent scripts defined in Dependencies!
-7. If using the QBox framework, be sure to check the qbx_radialmenu.txt file for proper setup in your server!
+6. If using the QBox framework, be sure to check the qbx_radialmenu.txt file for proper setup in your server!
 
 # Features
 1. Unique Lockboxes for LEO or EMS to use in their vehicles
